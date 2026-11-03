@@ -52,7 +52,8 @@ same script). Never build and then patch with many small edits; to fix, change t
    chart or photo, and the last page. Deck: every slide (small at 50 dpi).
 3. Real breakage only (overlap, off the page, a page spilling over): fix the script, rebuild, re-render,
    once. To read small text, re-render one page at `-r 100 -f N -l N`. Wrong-looking font: see the font
-   note in house-style.md first.
+   note in house-style.md first. Still broken after that one fix (a page that won't fit): stop, deliver,
+   and ask him what to cut.
 
 ## When he corrects a look
 
