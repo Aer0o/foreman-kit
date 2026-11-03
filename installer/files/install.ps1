@@ -278,18 +278,20 @@ $markets = Get-Child $settings 'extraKnownMarketplaces'
 if ($MarketplaceDir) {
     Set-Prop $markets 'spark' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'directory'; path = $MarketplaceDir } })
 } else {
-    Set-Prop $markets 'spark' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'github'; repo = $MarketplaceRepo }; autoUpdate = $true })
+    Set-Prop $markets 'spark' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'git'; url = "https://github.com/$MarketplaceRepo.git" }; autoUpdate = $true })
 }
 $plugins = Get-Child $settings 'enabledPlugins'
 Set-Prop $plugins 'spark@spark' $true
 
+# Both marketplaces use plain HTTPS git URLs: the 'github' source type clones over SSH, which fails on a PC
+# with no GitHub keys.
 # Anthropic's Word/PDF/PowerPoint/Excel skills: the desktop app usually brings them with his account.
 # Only when they aren't there do we switch on Anthropic's own copy, so he never has two.
 $accountSkills = Find-First @("$env:LOCALAPPDATA\Claude-Data\*\local-agent-mode-sessions\skills-plugin\*\*\skills\docx\SKILL.md")
 if ($accountSkills) {
     Ok 'Word, PDF, PowerPoint and Excel skills: already in your Claude app'
 } else {
-    Set-Prop $markets 'anthropic-agent-skills' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'github'; repo = 'anthropics/skills' }; autoUpdate = $true })
+    Set-Prop $markets 'anthropic-agent-skills' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'git'; url = 'https://github.com/anthropics/skills.git' }; autoUpdate = $true })
     Set-Prop $plugins 'document-skills@anthropic-agent-skills' $true
     Ok "Word, PDF, PowerPoint and Excel skills: switched on Anthropic's copy"
 }

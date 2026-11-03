@@ -2,8 +2,9 @@
 
 ## How an update reaches his PC
 
-His `settings.json` points at this repo (`extraKnownMarketplaces.spark`, GitHub `Aer0o/spark-kit`,
-`autoUpdate: true`). The plugin has **no `version` field on purpose**: Claude Code then uses the commit SHA
+His `settings.json` points at this repo (`extraKnownMarketplaces.spark`, a `git` source with the HTTPS URL
+`https://github.com/Aer0o/spark-kit.git`, `autoUpdate: true`). Not the `github` source type: that one clones over
+SSH and fails on a PC without GitHub keys (checked 2026-11-03). The plugin has **no `version` field on purpose**: Claude Code then uses the commit SHA
 as the version, so every push to `main` counts as an update. (`claude plugin validate` warns about the
 missing version; ignore it. Adding a version would freeze him on that version until it changes.)
 
