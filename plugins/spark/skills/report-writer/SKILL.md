@@ -46,6 +46,9 @@ line on what goes under it. Ask "Look right?" and wait. If he said "just write i
   Don't describe anything the photo doesn't show.
 - **Money:** totals come from his line items, and the report shows the sum. If his figures don't add up,
   don't correct them; flag it to him.
+- **No words in his mouth.** Don't add commitments, recommendations or options he didn't state ("we will
+  price that separately", "a sub-panel may be needed"). If one seems worth saying, put it in as
+  `[SUGGEST: ...]` with yellow highlighting and list it for him to keep or cut.
 - Write as the company ("we"), Canadian spelling, his terms for things.
 - Run the **plain-writing** skill on the text before building the file.
 
@@ -69,12 +72,13 @@ whichever is available). Don't write the Word format by hand.
      directly; Anthropic's soffice.py wrapper is Linux-only.
    - Render: `pdftoppm -png -r 80 "<report.pdf>" "<scratch folder>\page"`.
    - Open the PNGs and look: overlapping text, tables running off the page, photos too big or split,
-     headings stranded at the bottom of a page, empty pages, wrong fonts. Fix, re-render, look again.
+     headings stranded at the bottom of a page, empty pages, wrong fonts. Fix, re-render, look again,
+     **two rounds at most**. Fix breakage, not polish; every round uses his plan.
    - Long report: check page 1, every page with a table or photo, and the last page.
    - If soffice or pdftoppm is missing, don't claim the check. Tell him: "I couldn't preview the pages on
      this PC. Double-click Fix SPARK in the SPARK folder, then ask me again."
-3. **Tell him**, in a few lines: the report as a link, how many pages, and every `[NEEDS]` item as a short
-   list so he can fill them in.
+3. **Tell him**, in a few lines: the report as a link, how many pages, and every `[NEEDS]` and `[SUGGEST]`
+   item as a short list so he can fill them in or cut them.
 4. **Offer a PDF:** "Want a PDF copy to send?" If yes, convert into the same folder as the Word file and
    give that link too.
 

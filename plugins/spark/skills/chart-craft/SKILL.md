@@ -96,7 +96,7 @@ and a few words) rather than a paragraph beside it. The point should survive a t
 Convert the file: `soffice --headless --convert-to pdf --outdir <scratch folder> "<file>"` (call soffice
 directly; Anthropic's soffice.py wrapper is Linux-only). Render:
 `pdftoppm -png -r 80 "<file.pdf>" "<scratch folder>\page"`. Look at the chart: labels overlapping or cut
-off, legend still there, wrong colours, axis not at zero. Fix and re-render. If soffice or pdftoppm is
+off, legend still there, wrong colours, axis not at zero. Fix and re-render, two rounds at most. If soffice or pdftoppm is
 missing, don't claim the check; tell him to double-click Fix SPARK in the SPARK folder.
 
 ## Checklist

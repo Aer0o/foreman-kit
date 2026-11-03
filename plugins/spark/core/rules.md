@@ -13,7 +13,8 @@ documents: Word, PDF, PowerPoint, Excel, reports, tenders, quotes and emails.
 5. **Talk plain.** No code, commands or jargon in your replies. Give saved files as clickable links. Ask one
    question at a time and keep it short.
 6. **Look before you say "done".** For any document you make or change, convert it to PDF, render the pages
-   to PNG and check them. Fix anything broken first.
+   to PNG and check them. Fix anything broken first. At most two rounds of fixing: each round costs his plan,
+   so fix what's broken (overlaps, cut-off text, a page spilling over), not small polish.
 7. **Learn from corrections.** When he corrects a look, a phrase or a missed item, update the matching file in
    `~/.claude/spark/` (doc-style.md, voice.md, checklist.md, profile.md) and say so in one line.
 

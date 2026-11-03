@@ -1,5 +1,28 @@
 # WORKLOG: SPARK
 
+## 2026-11-03 · Full model runs with SPARK loaded
+
+- **How:** `claude -p --plugin-dir plugins/spark --setting-sources local` with a test profile (Northline Electric,
+  #1F4E79). Oleg's own settings and hooks were off. The CLI needed `claude auth login` first.
+- **Report from site notes:**
+  - It picked report-writer, said "SPARK is ready", and produced a clean one-page report with letterhead, brand
+    colour, summary first and `[NEEDS]` in yellow.
+  - It caught 6 spares against 10 new circuits without changing the figures.
+  - It cost 47 turns / $3.15 because of five render-fix rounds, and it added two commitments he never made.
+  - Fixed: at most two render rounds (in rules.md, report-writer, doc-design, doc-edit and chart-craft), and a
+    "no words in his mouth" rule with `[SUGGEST: ...]`.
+- **Part number:** spec-lookup found QO120CAFI on Schneider's Canadian page and data sheet, with every value
+  CHECKED and linked. It said which pack variant the CSA line came from. 19 turns / $1.43.
+- **3-slide deck from the report:** each title states the point, one accent colour, numbers only from the report,
+  `[NEEDS: date]` kept. 23 turns / $1.57.
+- **PDF schedule to Excel:** picked doc-to-excel and extracted 5 rows. Numbers are numeric, totals are formulas
+  (54 fixtures, 1,462 W, checked by hand), there's a Source column, freeze and filter are on, and the answer
+  says the totals are its own math. 24 turns / $1.65.
+- **Hooks:** no hook errors in any run and no tools missing. No backups were taken because the test folder is
+  under %TEMP%, which file-guard skips by design; the unit tests cover backups.
+- **Not covered:** the desktop app on his PC, Anthropic's own docx/pptx skills (not loaded with
+  `--setting-sources local`, so Claude used python-docx/python-pptx directly), and the Plain Office style
+  (init still reports `default`, though the replies read plain).
 ## 2026-11-03 · SPARK 2 built
 
 - **Why:** Oleg's estimator friend uses Claude Code (Windows desktop app, Pro) mostly for documents. The

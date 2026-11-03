@@ -76,7 +76,7 @@ looks wrong, flag it in your summary and leave it.
 1. Convert the new copy: `soffice --headless --convert-to pdf --outdir <scratch folder> "<file>"`. Call
    soffice directly; Anthropic's soffice.py wrapper is Linux-only.
 2. Render: `pdftoppm -png -r 80 "<file.pdf>" "<scratch folder>\page"`. Look at page 1 and every page you
-   changed. Fix anything that moved, overlapped or broke, then render again.
+   changed. Fix anything that moved, overlapped or broke, then render again (two rounds at most).
 3. If soffice or pdftoppm is missing, don't claim the check; tell him to double-click Fix SPARK in the
    SPARK folder.
 4. If you rewrote sentences, run the **plain-writing** skill on the new text only.

@@ -58,6 +58,7 @@ Every time, no exceptions:
 3. Open the PNGs and look at them against the preview checklist at the end of house-style.md. For a long
    document: page 1, every page with a table, chart or photo, and the last page.
 4. Something overlaps, runs off the page or breaks: fix it, re-render, look again. Only then say done.
+   Two fix rounds at most; each one uses his plan. Fix breakage, not polish.
 
 If soffice or pdftoppm is missing, don't claim the check. Tell him: "I couldn't preview the pages on this
 PC. Double-click Fix SPARK in the SPARK folder, then ask me again."
