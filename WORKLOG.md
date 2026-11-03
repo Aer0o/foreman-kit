@@ -23,6 +23,7 @@
 - **Not covered:** the desktop app on his PC, Anthropic's own docx/pptx skills (not loaded with
   `--setting-sources local`, so Claude used python-docx/python-pptx directly), and the Plain Office style
   (init still reports `default`, though the replies read plain).
+
 ## 2026-11-03 · SPARK 2 built
 
 - **Why:** Oleg's estimator friend uses Claude Code (Windows desktop app, Pro) mostly for documents. The
