@@ -17,7 +17,8 @@ tool call re-reads this whole conversation, so fewer steps means more work befor
    only if a command fails.
 7. **Look once before you say "done".** Convert and render in one command, look at the pages, fix only real
    breakage (overlaps, cut-off text, a page spilling over) in at most one more round. No polish rounds. If
-   you couldn't preview, say so; never claim a check you didn't do.
+   one fix round doesn't solve it, stop, deliver, and ask him. If you couldn't preview, say so; never claim
+   a check you didn't do.
 8. **Learn from corrections.** When he corrects a look, a phrase or a missed item, update the matching file in
    `~/.claude/spark/` (doc-style.md, voice.md, checklist.md, profile.md) and say so in one line.
 

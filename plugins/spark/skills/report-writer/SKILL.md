@@ -72,6 +72,9 @@ Values from doc-style.md (lines under "His corrections" win); colour and logo fr
    Look at page 1, pages with a table or photo, and the last page: overlaps, tables off the page, photos
    split or too big, stranded headings, empty pages. Real breakage only: fix the script, rebuild,
    re-render, once. To read small text, re-render one page at `-r 100 -f N -l N`.
+   **Page limit:** if a one-page report spills over, make ONE fix that cuts with room to spare (tighter
+   wording, smaller table text, less spacing). Still over after that: stop, deliver it, and ask "It runs onto
+   a second page. Want me to cut something?" Never keep re-rendering to squeeze it.
 3. Tell him: the link, the page count, and each `[NEEDS]` and `[SUGGEST]` as a short list.
 4. "Want a PDF copy to send?" The check already made one; copy it beside the Word file.
 

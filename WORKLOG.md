@@ -1,5 +1,32 @@
 # WORKLOG: SPARK
 
+## 2026-11-03 · Token pass for the Pro plan, setup guide, inventory
+
+- **Finding:** the first turn is ~53k tokens, mostly Claude Code itself; SPARK adds ~2k. What drives cost is
+  the number of tool calls, because each one re-reads the context. The 47-step report re-read 3M cached tokens.
+- **Changes:**
+  - **rules.md:** work in few steps; build each file with one script; one convert+preview command at 50 dpi;
+    one fix round, then stop and ask. Build new Office files with python-docx / openpyxl / python-pptx, and
+    load Anthropic's Office skills only for tracked changes, complex edits and PDF forms.
+  - **Skills:** no skill loads another; descriptions 36% shorter (3.6k -> 2.3k chars always on), bodies 21%
+    shorter.
+  - **Installer** (only where he hasn't chosen his own value):
+    - `autoCompactWindow` 200000, top level and for Opus 5.5
+    - Opus 5.5 `effortLevel` high
+    - `promptSuggestionEnabled` false
+    - `disableBundledSkills` true
+    - `CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS`
+    - deny NotebookEdit
+  - Verified in docs and present in the Claude Code binary, except `modelSettings` (2.1.288+; the CLI here
+    is 2.1.233).
+- **Re-runs with his settings:**
+  - Site report: 47 steps / $3.15 -> 26 / $1.59. It still took 5 preview rounds to squeeze onto one page,
+    so the page-limit rule is now "one fix, then ask".
+  - PDF to Excel: 24 / $1.65 -> 10 / $0.58.
+- **Docs:** `docs/SETUP-GUIDE.md` (on-site install) and `docs/INVENTORY.md` (everything installed or changed).
+  A GitHub release for the zip was blocked as a new public surface; the guide uses the repo's own zip download
+  link instead.
+- **Tests:** 64/64.
 ## 2026-11-03 · Full model runs with SPARK loaded
 
 - **How:** `claude -p --plugin-dir plugins/spark --setting-sources local` with a test profile (Northline Electric,

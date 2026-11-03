@@ -5,8 +5,8 @@ short walk-through.
 
 ## Bring or check before you go
 
-- **The zip.** Download it on his PC from
-  https://github.com/Aer0o/spark-kit/releases/latest/download/SPARK.zip, or bring `dist/SPARK.zip` on a USB stick.
+- **The kit.** Either bring `dist/SPARK.zip` on a USB stick, or download the whole repo on his PC from
+  https://github.com/Aer0o/spark-kit/archive/refs/heads/main.zip: its `installer` folder is the same kit.
 - **His Windows password.** Installing LibreOffice and the other programs shows "Do you want to allow this app
   to make changes?". If his account isn't an administrator, an admin password is needed.
 - **His Claude login** (claude.ai, Pro plan), already signed in to the Claude desktop app.
@@ -25,7 +25,8 @@ short walk-through.
 ## 2. Run the installer (10-15 min)
 
 1. Put the zip in `Documents`. Right-click it > **Properties** > tick **Unblock** > OK.
-2. Right-click > **Extract All** into `Documents\SPARK`. Keep this folder: Fix SPARK lives here.
+2. Right-click > **Extract All** into `Documents\SPARK`. Keep this folder: Fix SPARK lives here. (From the
+   GitHub download, keep only the `installer` folder's contents in `Documents\SPARK`.)
 3. Double-click **Install SPARK**.
    - "Windows protected your PC": click **More info** > **Run anyway**.
    - It lists the programs it will install. Type **Y**, then Enter.
@@ -82,8 +83,7 @@ report from his notes and a quote check. Point out:
 His plan has a 5-hour limit and a weekly limit, shared between claude.ai and Claude Code. On Pro he can hit
 a model-specific Opus limit and keep working by switching model. The three things that use his limit fastest:
 
-1. **Effort.** He runs near-max thinking. In the real tests a one-page report used about 47 steps before I
-   optimised the kit. Thinking is paid on every step. Suggest to him:
+1. **Effort.** He runs near-max thinking. In the real tests a one-page report took 47 steps before I optimised the kit and 26 after. Thinking is paid on every step. Suggest to him:
    - **High** for tenders, quote checks and anything with money.
    - **Medium** for emails, proofreading and small edits.
    - **Max** only when a hard job got something wrong.
