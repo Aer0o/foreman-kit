@@ -241,6 +241,14 @@ $stopCmds = @($s.hooks.Stop | ForEach-Object { $_.hooks } | ForEach-Object { $_.
 Check 'keeps his own hook that shared a group with a SPARK 1 hook' ($stopCmds -contains 'echo his-own-hook' -and -not ($stopCmds -match 'source-guard')) ($stopCmds -join ' | ')
 Check 'an empty allow list becomes a clean list' ($p.ExitCode -eq 0 -and @($s.permissions.allow | Where-Object { $null -eq $_ }).Count -eq 0 -and @($s.permissions.allow).Count -gt 5)
 Check 'turns SPARK on' ($s.enabledPlugins.'spark@spark' -eq $true)
+Check 'pulls SPARK over HTTPS, not SSH' ($s.extraKnownMarketplaces.spark.source.source -eq 'directory' -or $s.extraKnownMarketplaces.spark.source.url -like 'https://*')
+Check 'sets the Pro-plan savings' ($s.autoCompactWindow -eq 200000 -and $s.promptSuggestionEnabled -eq $false -and $s.disableBundledSkills -eq $true -and $s.modelSettings.'claude-opus-5-5'.effortLevel -eq 'high' -and $s.env.CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS -eq '1' -and @($s.permissions.deny) -contains 'NotebookEdit')
+
+$own = '{ "autoCompactWindow": 500000, "modelSettings": { "claude-opus-5-5": { "effortLevel": "xhigh" } } }'
+[IO.File]::WriteAllText("$cfg\settings.json", $own)
+$p = Start-Process powershell.exe -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$inst`"", '-ConfigDir', "`"$cfg`"", '-SkipTools', '-MarketplaceDir', "`"$repo`"") -Wait -PassThru -WindowStyle Hidden
+$s = Get-Content "$cfg\settings.json" -Raw | ConvertFrom-Json
+Check 'keeps his own effort and compaction choices' ($s.autoCompactWindow -eq 500000 -and $s.modelSettings.'claude-opus-5-5'.effortLevel -eq 'xhigh' -and $s.modelSettings.'claude-opus-5-5'.autoCompactWindow -eq 200000)
 
 $log = Join-Path $env:SPARK_HOME 'hook-errors.log'
 Check 'no hook logged an error' (-not (Test-Path $log)) $(if (Test-Path $log) { Get-Content $log -Raw })

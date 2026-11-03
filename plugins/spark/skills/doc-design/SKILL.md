@@ -1,85 +1,69 @@
 ---
 name: doc-design
-description: Make a Word, PDF or PowerPoint document look clean and professional, or change how his documents look from now on. Use when he says "make this look professional", "clean up the formatting", "this looks messy", "make it look like a real company sent it", or corrects a look ("bigger headings", "use our blue", "too much space").
+description: Make a Word document, PDF or slide deck look clean and professional, or change his house style. Use for "make this look professional", "clean up the formatting", "make a deck" or "use our blue".
 ---
 
 # Document design
 
-Goal: documents that look like a well-run contracting company sent them. Plain, consistent, easy to read
-printed and on a phone.
+Documents and decks that look like a well-run contracting company sent them: plain, consistent, easy to
+read printed and on a phone.
 
 ## Where the look comes from
 
-1. `~/.claude/spark/doc-style.md` holds **the values**: font, sizes, spacing, margins, tables, footer,
-   slides. Lines under "His corrections" override the list above them. This file is the only source of
-   values; don't bring in other numbers.
-2. `~/.claude/spark/profile.md` holds the brand colour, logo path, company name, address and licence number.
-3. [references/house-style.md](references/house-style.md) explains **how** to apply those values in Word,
-   PDF and PowerPoint, the fallbacks, and the anti-patterns. Read it before building or restyling.
+Read all three in one round before building:
 
-If a file is missing or a line is blank, use the fallback from house-style.md and tell him in one line,
-e.g. "No brand colour on file, so I used dark grey. Tell me your colour and I'll keep it." Never invent a
-brand colour, a logo or company details.
+1. `~/.claude/spark/doc-style.md`: **the values** (font, sizes, spacing, margins, tables, footer, slides).
+   Lines under "His corrections" override the list. The only source of values.
+2. `~/.claude/spark/profile.md`: brand colour, logo path, company name, address, licence number.
+3. [references/house-style.md](references/house-style.md): **how** to apply them in Word, PDF and
+   PowerPoint, fallbacks, anti-patterns, preview checklist.
 
-## Who does the file work
+Missing file or blank line: use the house-style.md fallback and say so in one line ("No brand colour on
+file, so I used dark slate. Tell me your colour and I'll keep it."). Never invent a colour, logo or
+company details.
 
-This skill decides the look. Anthropic's skills do the file work; call them by name:
+File work: python-docx, python-pptx or openpyxl directly (the SPARK rules say when to load the docx/pptx skill). Charts inside: grey plus one accent on the point, title
+states the takeaway, direct labels, nothing 3D.
 
-- Word: the docx skill (`anthropic-skills:docx` or `document-skills:docx`)
-- PowerPoint: the pptx skill · PDF: the pdf skill · Excel: the xlsx skill
-- Charts inside any of these: the **chart-craft** skill.
-
-A PDF can't be restyled in place. Restyle the Word or PowerPoint file it came from. If he only has the PDF,
-offer to rebuild it as a Word document (text and tables carried over, then styled) saved as a new file.
+A PDF can't be restyled in place: restyle the Word or PowerPoint file it came from, or offer to rebuild
+the PDF as a new Word document.
 
 ## Restyling an existing document
 
-- Never overwrite his file. Save as "<name> v2.docx" beside it (next free number; "Quote v3" becomes
-  "Quote v4", not "Quote v3 v2").
-- Change the look, not the content. Don't reword, reorder or drop anything unless he asked. Every number
-  stays exactly as it was.
-- Fix the structure first, then the style: real headings (heading styles, not bold body text), real tables
-  (not tabs and spaces), real lists, page breaks instead of rows of blank lines.
-- If it's built on a template he clearly chose (his letterhead, a client's form), keep that and only clean
-  up. If unsure, ask one question.
+- v2 copy per the SPARK rules ("Quote v3" becomes "Quote v4", not "Quote v3 v2").
+- Change the look, not the content: no rewording, reordering or dropping unless asked; every number stays.
+- Structure first: real headings (not bold body text), real tables (not tabs and spaces), real lists,
+  page breaks instead of blank lines.
+- Built on a template he clearly chose (his letterhead, a client's form): keep it, only clean up. Unsure:
+  ask one question.
+- Do the whole restyle in ONE script that opens his file, applies every change and saves the copy.
 
-## New documents
+## New documents and decks
 
-Build in the house style from the first line. Page setup, header and footer, tables and slides are all in
-house-style.md.
+Gather his content plus the three files in one go, then write ONE script that builds the whole thing in the
+house style (Word with python-docx; slides with pptxgenjs or python-pptx, every slide in the
+same script). Never build and then patch with many small edits; to fix, change the script and rerun.
 
-## Look before you say done
+## Look once
 
-Every time, no exceptions:
-
-1. Convert to PDF: `soffice --headless --convert-to pdf --outdir <scratch folder> "<file>"`. Call soffice
-   directly; Anthropic's soffice.py wrapper is Linux-only. Skip this for a file that is already a PDF.
-2. Render the pages: `pdftoppm -png -r 80 "<file.pdf>" "<scratch folder>\page"`.
-3. Open the PNGs and look at them against the preview checklist at the end of house-style.md. For a long
-   document: page 1, every page with a table, chart or photo, and the last page.
-4. Something overlaps, runs off the page or breaks: fix it, re-render, look again. Only then say done.
-   Two fix rounds at most; each one uses his plan. Fix breakage, not polish.
-
-If soffice or pdftoppm is missing, don't claim the check. Tell him: "I couldn't preview the pages on this
-PC. Double-click Fix SPARK in the SPARK folder, then ask me again."
-
-If headings or body text in the preview look like the wrong font, check the font note in house-style.md
-before changing anything else.
+1. Convert and render in one command (skip the convert for a PDF):
+   `soffice --headless --convert-to pdf --outdir "<scratch>" "<file>"; pdftoppm -png -r 50 "<scratch>\<name>.pdf" "<scratch>\p"`
+2. Check against the preview checklist in house-style.md. Long document: page 1, pages with a table,
+   chart or photo, and the last page. Deck: every slide (small at 50 dpi).
+3. Real breakage only (overlap, off the page, a page spilling over): fix the script, rebuild, re-render,
+   once. To read small text, re-render one page at `-r 100 -f N -l N`. Wrong-looking font: see the font
+   note in house-style.md first.
 
 ## When he corrects a look
 
-He says "bigger headings", "less space between lines", "use our blue", "drop the grey".
+"Bigger headings", "less space between lines", "use our blue", "drop the grey":
 
-1. Make the change in this document, re-render and look.
-2. Add a dated line under "His corrections" in `~/.claude/spark/doc-style.md` with the new value, e.g.
-   "2026-11-12: headings bigger (heading 1 16 pt)". If it changes an earlier correction, edit that line
-   instead of adding a contradicting one.
-3. Tell him in one line: "Done, and I'll use bigger headings from now on."
+1. Change it in the script, rebuild, look once.
+2. Add a dated line under "His corrections" in doc-style.md with the new value, e.g. "2026-11-12: headings
+   bigger (heading 1 16 pt)". If it changes an earlier correction, edit that line instead.
+3. Tell him: "Done, and I'll use bigger headings from now on."
 
-A one-off ("for this tender use the GC's cover page") doesn't go in the file. If you can't tell, ask:
-"Just this one, or from now on?"
+A one-off ("for this tender use the GC's cover page") doesn't go in the file. Can't tell? "Just this one,
+or from now on?"
 
-## Reply to him
-
-The file as a link and one line on what changed ("Cleaned up the headings and tables, added page numbers").
-No list of fonts, sizes or settings unless he asks.
+Reply with the file as a link and one line on what changed. No fonts or settings unless he asks.

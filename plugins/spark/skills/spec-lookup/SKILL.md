@@ -1,72 +1,57 @@
 ---
 name: spec-lookup
-description: Use when he asks about a part number, catalogue number, product, rating or spec value, e.g. "what's the part number for", "find me the datasheet", "is this CSA approved", "what's the rating on", "is X equal to Y". Every answer comes with a source he can click, or it says it couldn't be confirmed.
+description: Look up a part number, catalogue number, rating or spec with a source he can click, or say it couldn't be confirmed. Use for "what's the part number for", "find me the datasheet" or "is this CSA approved".
 ---
 
 # Spec lookup
 
 He has been burned by made-up part numbers. This skill exists to stop that.
 
-## The hard rule
+**No catalogue number, part number, rating, dimension, certification or spec value without a source he can
+click**: the manufacturer's product page or datasheet (URL), or a page in a document he gave you (file and
+page). No source means "couldn't confirm", however confident you are. Memory is not a source.
 
-**No catalogue number, part number, rating, dimension, certification or spec value without a source
-he can click.** A source is one of:
-- a manufacturer's product page or datasheet (URL), or
-- a page in a document he gave you (file name and page number).
-
-If you cannot find a source, the answer is "couldn't confirm", not your best guess. This applies even
-when you are confident from memory. Memory is not a source.
-
-## Labels
-
-Mark every fact you give him:
-- **CHECKED**: you read the value on the source page yourself. Give the link (or file and page).
-- **NOT CONFIRMED**: no source found, or sources disagree. Say what you would search and where.
-
-Never mix the two in one line. One fact per line.
+One fact per line, each labelled **CHECKED** (you read the value on the source yourself; give the link or
+file and page) or **NOT CONFIRMED** (no source, or sources disagree; say what you'd search and where).
 
 ## How to look things up
 
-1. **Documents first.** If he gave specs, drawings or submittals, search them first. Cite file and page.
-2. **Then the web**, if web search and web fetch are available in this session:
-   - Search, then **open the page** and find the exact value on it. A search result snippet is not
-     enough; snippets are often out of date or from a different model.
-   - Prefer the manufacturer's own site and its datasheets or spec sheets (often PDFs). Distributor
-     listings are second best: label them "distributor listing" because they are often wrong or stale.
-   - Match the part number exactly, character for character. Suffixes change the product (voltage,
-     colour, finish, mounting, number of poles). Explain a suffix only if the manufacturer's ordering
-     guide on the datasheet says what it means, and cite that page.
-   - If the datasheet is a PDF, read it with the pdf skill and cite the page.
-3. **No web tools in this session?** Say so plainly, then give him: the exact words to search, the
-   manufacturer site to search on, and what to look for on the datasheet.
+1. **His documents first** (specs, drawings, submittals), searched in one pass. Cite file and page.
+2. **Then the web**, if search and fetch are available:
+   - Several parts: run their searches in the same step, not one after another.
+   - Open the page and find the exact value. A search snippet is not enough; they're often stale or for a
+     different model.
+   - Manufacturer's site and datasheets first. A distributor listing is second best and labelled
+     "distributor listing". Stop once a fact is CHECKED on the manufacturer's page.
+   - Match the part number character for character; suffixes change the product (voltage, colour, finish,
+     mounting, poles). Explain a suffix only from the datasheet's ordering guide, citing the page.
+   - A PDF datasheet: read it (WebFetch, or pdfplumber once downloaded), cite the page.
+3. **No web tools?** Say so, then give him the exact search words, the manufacturer site, and what to look
+   for on the datasheet.
 
 ## Canada and Ontario
 
-- Products installed in Ontario need a Canadian certification mark. Note which mark the source shows
-  (for example CSA, cUL, cETL). "UL" without the small "c" is a US listing only: flag it.
-- Confirm the mark from the datasheet or the certifier's online listing, not from a product photo.
-- If no Canadian mark is shown on any source, mark certification NOT CONFIRMED and tell him to ask
-  the supplier for the certificate before ordering.
-- Code questions (what the Ontario Electrical Safety Code requires): do not quote rule numbers or
-  values from memory. Point him to the code book or to ESA, and say what to look up.
+- Products installed in Ontario need a Canadian mark (CSA, cUL, cETL...). Note which one the source shows.
+  "UL" without the small "c" is a US listing only: flag it.
+- Confirm the mark from the datasheet or the certifier's listing, not a product photo. No Canadian mark on
+  any source: NOT CONFIRMED, and he should ask the supplier for the certificate before ordering.
+- Code questions (Ontario Electrical Safety Code): no rule numbers or values from memory. Point him to the
+  code book or ESA and say what to look up.
 
 ## Equals and substitutions
 
-When he asks "is X equal to Y":
-- Put the key values side by side, each with its own source and label.
-- Point out every difference you find, and every value you could not confirm for one of the two.
-- Never declare them equal. Whether an alternate is accepted is the engineer's call, through the
-  approved-equal or substitution process in the spec. Say that once.
+"Is X equal to Y": key values side by side, each with its own source and label; every difference, and every
+value you couldn't confirm for one of them. Never declare them equal: whether an alternate is accepted is
+the engineer's call through the spec's approved-equal or substitution process. Say that once.
 
 ## Never
 
-- Never give prices or stock levels. Prices come from his supplier.
-- Never fill a gap with a "typical" value ("usually 10 kA", "most are 4 inch"). Typical is a guess.
-- Never shorten or "clean up" a part number. Copy it exactly as the source shows it.
+Prices or stock levels (those come from his supplier). A "typical" value to fill a gap ("usually 10 kA").
+A shortened or cleaned-up part number.
 
 ## Answer format
 
-Short. A small table per product works well:
+A small table per product:
 
 | What | Value | Status | Source |
 |---|---|---|---|
@@ -74,5 +59,5 @@ Short. A small table per product works well:
 | Rating | (value with units) | CHECKED | (datasheet link, p. 2) |
 | Canadian certification | (mark) | NOT CONFIRMED | search "(terms)" on (site) |
 
-Then one line on anything he should double-check with the supplier. If he looks up several products,
-offer once to put them in an Excel sheet (the doc-to-excel skill, with the sources in a column).
+Then one line on anything to double-check with the supplier. Several products: offer once to put them in an
+Excel sheet with a Source column.

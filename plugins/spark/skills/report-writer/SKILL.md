@@ -1,85 +1,78 @@
 ---
 name: report-writer
-description: Write a report from his notes, photos, drawings or files - site reports, inspection or condition reports, project summaries, close-out reports and proposals. Use when he says "write up a report", "turn my notes into a site report", "I need a proposal for this job", "summarize this job for the owner" or "write up what we found".
+description: Write a site, inspection, close-out or project report, or a proposal, from his notes, photos and files. Use for "write up a report", "turn my notes into a site report" or "I need a proposal".
 ---
 
 # Report writer
 
 Turns his notes, photos and numbers into a finished Word report that leads with the answer.
 
-Read first, if present: `~/.claude/spark/profile.md` (company name, address, licence number, logo, who signs)
-and `~/.claude/spark/doc-style.md` (how documents look). Use what's there; never invent what isn't.
+## 1. Gather in one go
 
-## 1. Ask at most three questions
+In one round of reads: everything he gave you, `~/.claude/spark/profile.md` (company, address, licence
+number, logo, signer) and `~/.claude/spark/doc-style.md` (the look). No folder listings or tool checks.
 
-Ask only what you can't tell from what he gave you. One question at a time, short:
+Ask only what you can't tell, one question at a time, three at most: who reads it (owner, GC, property
+manager, inspector, insurer, his files); what decision it supports (approve extra work, fix deficiencies,
+release a payment, accept the proposal); how long (one page, or full with photos). Skip what the request
+already answers.
 
-1. Who reads it? (owner, GC, property manager, inspector, insurer, his own files)
-2. What decision does it support? (approve extra work, fix deficiencies, release a payment, accept the proposal)
-3. When is it due, and how long should it be? (one page, or a full report with photos)
-
-If the answer is obvious ("site report for the GC on today's visit"), skip that question.
-
-## 2. Show the outline first
-
-Pick the shape below, adjust it to what he actually has, and show it in a few lines: each heading plus one
-line on what goes under it. Ask "Look right?" and wait. If he said "just write it", skip this step.
+Show an outline (headings plus one line each, then "Look right?") only if the report will run past two
+pages or he asked to see it first. Otherwise write it. Shapes:
 
 | Report | Shape |
 |---|---|
-| Site report | Summary · date, site, who attended · work done or observed · issues and deficiencies · actions (who, by when) · photos |
-| Inspection or condition | Summary and recommendations by urgency · what was inspected and the limits · findings by area or system · recommendations (urgent / soon / plan for) · photos |
-| Project summary or close-out | Outcome in two lines · scope delivered · changes and extras · schedule · cost against budget (his figures) · open items, warranty |
-| Proposal | What we propose and the price summary · scope · inclusions · exclusions and clarifications (from profile.md) · schedule · terms and validity · acceptance |
+| Site report | Summary; date, site, who attended; work done or observed; issues and deficiencies; actions (who, by when); photos |
+| Inspection or condition | Summary and recommendations by urgency; what was inspected and the limits; findings by area or system; recommendations (urgent / soon / plan for); photos |
+| Project summary or close-out | Outcome in two lines; scope delivered; changes and extras; schedule; cost against budget (his figures); open items, warranty |
+| Proposal | What we propose and the price summary; scope; inclusions; exclusions and clarifications (from profile.md); schedule; terms and validity; acceptance |
 
-## 3. Draft
+## 2. Write
 
-- **Answer first.** The opening section says what was found and what you recommend, in plain sentences.
-  Someone who reads only page one should know what to do and by when.
-- **Every number has a source.** Keep a private list of where each number, date, name, model and
-  measurement came from (file and page, photo, or "his message"). If one is missing, write
-  `[NEEDS: what is missing]` in the text. Never estimate, round, or fill a gap with a typical value.
-- **No code citations from memory.** Never cite an electrical code rule, standard or bulletin by number
-  unless he gave you the reference. Write `[NEEDS: code reference]` instead.
-- **Findings:** one per paragraph or table row. Where it is, what it is, why it matters, what to do.
-- **Photos:** place each next to the finding it shows, with a short caption (where, and what it shows).
-  Don't describe anything the photo doesn't show.
-- **Money:** totals come from his line items, and the report shows the sum. If his figures don't add up,
-  don't correct them; flag it to him.
-- **No words in his mouth.** Don't add commitments, recommendations or options he didn't state ("we will
-  price that separately", "a sub-panel may be needed"). If one seems worth saying, put it in as
-  `[SUGGEST: ...]` with yellow highlighting and list it for him to keep or cut.
-- Write as the company ("we"), Canadian spelling, his terms for things.
-- Run the **plain-writing** skill on the text before building the file.
+- **Answer first:** what was found and what to do, by when. Page one alone should be enough.
+- Keep a private source list for every number, date, name, model and measurement (file and page, photo,
+  "his message"). No estimates, rounding or typical values.
+- No code rule, standard or bulletin number unless he gave the reference: `[NEEDS: code reference]`.
+- One finding per paragraph or table row: where, what, why it matters, what to do.
+- Each photo beside the finding it shows, captioned where and what. Don't describe what it doesn't show.
+- Totals come from his line items; if they don't add up, flag it, don't correct.
+- **No words in his mouth.** Commitments, recommendations or options he didn't state ("we will price that
+  separately", "a sub-panel may be needed") go in as `[SUGGEST: ...]` for him to keep or cut.
+- "We" as the company, Canadian spelling, his terms. Lead with the point, cut filler and stock phrases,
+  active voice, one idea per sentence, no AI words (delve, robust, comprehensive). Findings flat;
+  recommendations as instructions ("Replace the two scorched breakers").
 
-## 4. Build the Word file
+## 3. Build it with one script
 
-The file work goes through Anthropic's docx skill (`anthropic-skills:docx` or `document-skills:docx`,
-whichever is available). Don't write the Word format by hand.
+Write ONE script that builds the whole report with python-docx and run it once. Never create
+the file and then patch it with many small edits; to fix anything, change the script and rerun it.
 
-- Style it from `~/.claude/spark/doc-style.md`. The **doc-design** skill and its house-style reference
-  explain how to apply it: letter-size paper, header and footer, tables, logo.
-- Give every `[NEEDS: ...]` placeholder yellow highlighting so he can't miss it.
-- File name in plain words: "Site report - <site> - <date>.docx". Save it in the folder his source files
-  came from; if there's no obvious folder, ask where. Temporary files go in a scratch folder.
+Values from doc-style.md (lines under "His corrections" win); colour and logo from profile.md:
 
-## 5. Check before saying done
+- Letter size set explicitly (12240 x 15840 twips; the tooling defaults to A4), margins from doc-style.md.
+- Font: if doc-style.md says Aptos, use its fallback (Calibri) unless a correction asks for Aptos (often a
+  cloud font the preview can't see). Don't search font folders.
+- Real styles (Title, Heading 1 and 2 with keep-with-next, Caption), real lists, left-aligned text.
+- Tables: bold header row in the accent colour, repeating on each page; thin grey rules, no vertical lines
+  or fills; numbers right-aligned; rows don't split; full text width.
+- Footer: company name (plus licence number if on file) left, "Page X of Y" fields right. Logo top left on
+  page 1, sized by height (1.5 to 2 cm), different first page.
+- Photos within the text width, aspect kept, long side about 1600 px; many photos two per row in a
+  borderless table.
+- Accent: brand colour; too light to read as text, near-black headings. None on file: #2F3B45, say so in
+  one line.
+- Every `[NEEDS]` and `[SUGGEST]` highlighted yellow.
+- "Site report - <site> - <date>.docx" in the folder his files came from (ask if none). Temp files in scratch.
 
-1. **Numbers:** walk your source list. Every number in the report matches its source, every total adds up
-   (do the arithmetic with a calculation, not by eye).
-2. **Look at it:**
-   - Convert: `soffice --headless --convert-to pdf --outdir <scratch folder> "<report.docx>"`. Call soffice
-     directly; Anthropic's soffice.py wrapper is Linux-only.
-   - Render: `pdftoppm -png -r 80 "<report.pdf>" "<scratch folder>\page"`.
-   - Open the PNGs and look: overlapping text, tables running off the page, photos too big or split,
-     headings stranded at the bottom of a page, empty pages, wrong fonts. Fix, re-render, look again,
-     **two rounds at most**. Fix breakage, not polish; every round uses his plan.
-   - Long report: check page 1, every page with a table or photo, and the last page.
-   - If soffice or pdftoppm is missing, don't claim the check. Tell him: "I couldn't preview the pages on
-     this PC. Double-click Fix SPARK in the SPARK folder, then ask me again."
-3. **Tell him**, in a few lines: the report as a link, how many pages, and every `[NEEDS]` and `[SUGGEST]`
-   item as a short list so he can fill them in or cut them.
-4. **Offer a PDF:** "Want a PDF copy to send?" If yes, convert into the same folder as the Word file and
-   give that link too.
+## 4. Check once
+
+1. Have the script (or one calculation) check every total against your source list.
+2. Convert and render in one command:
+   `soffice --headless --convert-to pdf --outdir "<scratch>" "<report.docx>"; pdftoppm -png -r 50 "<scratch>\<name>.pdf" "<scratch>\p"`
+   Look at page 1, pages with a table or photo, and the last page: overlaps, tables off the page, photos
+   split or too big, stranded headings, empty pages. Real breakage only: fix the script, rebuild,
+   re-render, once. To read small text, re-render one page at `-r 100 -f N -l N`.
+3. Tell him: the link, the page count, and each `[NEEDS]` and `[SUGGEST]` as a short list.
+4. "Want a PDF copy to send?" The check already made one; copy it beside the Word file.
 
 Before he sends it, offer the **proofread** skill as a last check.

@@ -54,7 +54,7 @@ most; beyond that, group the tail into "Other" or use a table.
 
 - Recolour the **chart**, not the workbook theme: select a series, Format, Fill, More Colours, Custom, and
   enter the code. Repeat only for the accent series.
-- When building through the xlsx or pptx skill, set each series colour explicitly; never rely on the
+- When building with openpyxl or python-pptx, set each series colour explicitly; never rely on the
   default colour cycle.
 - A finished chart can be saved as a chart template (right-click, Save as Template) so the next one starts
   clean.

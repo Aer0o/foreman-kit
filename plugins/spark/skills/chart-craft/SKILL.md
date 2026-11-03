@@ -1,32 +1,21 @@
 ---
 name: chart-craft
-description: Make clear, honest, professional charts and data slides in Excel or PowerPoint (and charts placed in Word reports). Use before making any chart or graph, or when he says "make a chart of this", "graph these numbers", "put this in a slide", "this chart looks off" or "it looks like default Excel".
+description: Make clear, honest charts and data slides in Excel, PowerPoint or Word. Use for "make a chart of this", "graph these numbers", "put this in a slide" or "it looks like default Excel".
 ---
 
 # Chart craft
 
-Bad charts start with picking a chart type. Good ones start with deciding what the chart should say.
-Decide that first, then make the result look deliberate instead of default.
-
-The file work goes through Anthropic's skills: the xlsx skill for Excel, the pptx skill for PowerPoint,
-the docx skill for a chart in a Word report (`anthropic-skills:*` or `document-skills:*`). Build **native,
-editable charts** so he can change the numbers later; use a picture of a chart only when the target can't
-hold a native one. (In code, the same rules apply: set an explicit palette, never the library default.)
+Decide what the chart should say, then make it look deliberate instead of default. File work goes through
+openpyxl or python-pptx (in Word, a picture of the chart, or the docx skill if it must stay editable). Build **native, editable charts** so he can change the numbers later; a
+picture of a chart only when the target can't hold one. In code, set an explicit palette.
 
 ## 1. Write the sentence first
 
-Finish this before choosing anything: "This chart shows that ______."
+"This chart shows that ______", e.g. "Labour is most of the cost on this change order", "We're behind on
+rough-in but ahead on trim-out". It picks the type, the highlight and the title. Can't write it? Ask him
+what the reader should take away.
 
-- "Labour is most of the cost on this change order."
-- "Three of the eight floors carry most of the deficiencies."
-- "We're behind on rough-in but ahead on trim-out."
-
-That sentence picks the chart type, what to highlight, and the title. If you can't write it, ask him what
-he wants the reader to take away.
-
-## 2. Pick the form from the sentence
-
-Full picker: [references/chart-picker.md](references/chart-picker.md). Short version:
+## 2. Pick the form
 
 | The sentence is about | Use | Not |
 |---|---|---|
@@ -37,77 +26,33 @@ Full picker: [references/chart-picker.md](references/chart-picker.md). Short ver
 | One number that matters | Big number plus one line of context | A one-bar chart |
 | Exact values he'll read off | A clean table | Any chart |
 
-Sort bars by value unless the categories have a natural order (months, floors, phases).
+Sort bars by value unless the categories have a natural order (months, floors, phases). Other cases:
+[references/chart-picker.md](references/chart-picker.md).
 
-## 3. Strip the junk
+## 3. Strip, colour, label
 
-Remove, in this order: heavy gridlines (delete or make faint grey), chart border, legend (label lines and
-bars directly instead), markers on busy lines, an axis you've made redundant with data labels, and always
-3D, shadows, gradients and bevels. Test: remove an element; if the chart still makes its sentence, leave it
-out.
+- Remove heavy gridlines (or make them faint grey), the border, the legend (label directly), markers on
+  busy lines, any 3D, shadow, gradient or bevel.
+- **Making a point:** everything grey, **one accent** on what the sentence is about: his brand colour from
+  `~/.claude/spark/profile.md` if dark enough, else one from [references/color.md](references/color.md).
+  Same accent across a deck or report. Set it on the series, not the workbook theme.
+- **Categories with no winner:** the colour-blind-safe palette in color.md, six at most; the rest go into
+  "Other" or a table. **Low to high:** shades of one colour. Never red against green alone.
+- Bar and column axes start at zero. One scale per axis (two small charts beat two vertical axes). No time
+  window that fakes a trend. A gap in his data stays a gap, and you tell him.
+- Round to what matters, real number format, unit once in the axis or chart title, value labels on the
+  bars. Font from `~/.claude/spark/doc-style.md`.
+- Title = the takeaway: "Labour is 60% of this change order", not "Cost breakdown".
+- A chart that keeps fighting you: a small table with the key row in bold, especially for three to eight
+  exact numbers.
 
-## 4. Colour with intent
+**Slides:** one point per slide, the title states it, a short note on the chart (arrow and a few words)
+instead of a paragraph. Readable in three seconds. Short labels, no filler.
 
-Rules and colour codes: [references/color.md](references/color.md).
+## Build and check
 
-- **Making a point:** everything grey, **one accent** on the thing the sentence is about. The accent is
-  his brand colour from `~/.claude/spark/profile.md` if it's dark enough to stand out; otherwise use one of
-  the accents in color.md. Same accent across a whole deck or report.
-- **Categories with no winner:** a colour-blind-safe palette, six colours at most. Past six, group the rest
-  into "Other" or use a table.
-- **Low to high:** shades of one colour. Never red against green alone.
-
-## 5. Don't let the chart mislead
-
-- Bar and column axes start at zero. Always.
-- One scale per axis. Avoid two vertical axes on one chart; use two small charts instead.
-- Don't pick a time window that fakes a trend.
-- Never invent a number or fill a gap. Every figure comes from his data; if some is missing, show the gap
-  and tell him.
-
-## 6. Format the numbers
-
-- Round to what matters: thousands don't need cents. Two or three significant figures is usually right.
-- In tables: right-aligned, same decimals down a column.
-- Units once, in the axis title or chart title, not on every label.
-- A value label touching its bar beats a value the reader has to find on an axis.
-
-## Excel and PowerPoint: escaping the default look
-
-1. Delete gridlines and the chart border.
-2. Recolour the series to grey, then the one series or bar that carries the point to the accent. Change
-   the chart's colours, not the workbook theme.
-3. Remove the legend and label directly.
-4. Title = the takeaway sentence, not the topic. "Labour is 60% of this change order", not "Cost breakdown".
-5. Sort the source data so bars come out in order.
-6. Set a real number format (rounded, with the unit). Turn off anything 3D.
-7. Font matches his documents (`~/.claude/spark/doc-style.md`).
-
-If a chart keeps fighting you, a small, tidy table with the key row in bold often says it better,
-especially for three to eight exact numbers on a slide.
-
-## Slides
-
-One point per slide. The slide title states the conclusion. Put a short note right on the chart (an arrow
-and a few words) rather than a paragraph beside it. The point should survive a three-second glance.
-
-## Look before you say done
-
-Convert the file: `soffice --headless --convert-to pdf --outdir <scratch folder> "<file>"` (call soffice
-directly; Anthropic's soffice.py wrapper is Linux-only). Render:
-`pdftoppm -png -r 80 "<file.pdf>" "<scratch folder>\page"`. Look at the chart: labels overlapping or cut
-off, legend still there, wrong colours, axis not at zero. Fix and re-render, two rounds at most. If soffice or pdftoppm is
-missing, don't claim the check; tell him to double-click Fix SPARK in the SPARK folder.
-
-## Checklist
-
-- [ ] I can say the one sentence this chart makes, and the title says it.
-- [ ] The type fits (bar to compare, line for time, table for exact values).
-- [ ] Bars sorted; bar axis starts at zero.
-- [ ] Gridlines, border, 3D and legend gone or muted; direct labels.
-- [ ] Grey plus one accent, or six or fewer colour-blind-safe colours.
-- [ ] Numbers rounded, unit shown once.
-- [ ] Every number from his data; nothing invented.
-
-Words on the chart or slide go through the **plain-writing** skill; the page around it follows
-**doc-design**.
+Write ONE script that builds the whole file with every chart, and run it once; fix by changing the script,
+never by patching the file with many small edits. Convert and render in one command:
+`soffice --headless --convert-to pdf --outdir "<scratch>" "<file>"; pdftoppm -png -r 50 "<scratch>\<name>.pdf" "<scratch>\p"`
+Look once at each chart: labels overlapping or cut off, a leftover legend, wrong colours, an axis not at
+zero. One more round only for real breakage.

@@ -8,11 +8,11 @@ apply only when doc-style.md or profile.md is silent.
 
 - One font family for everything: body, headings, tables, header, footer, slides. Size and weight make the
   hierarchy, not extra fonts.
-- Aptos is the current Office default, but on some PCs it's a download-on-demand cloud font that
-  LibreOffice (and older Office) can't see. Look for an Aptos file in `C:\Windows\Fonts` or
-  `%LOCALAPPDATA%\Microsoft\Windows\Fonts`. If it isn't there, use the fallback in doc-style.md (Calibri)
-  so the preview, the PDF and the person receiving it all see the same thing.
-- Last resort if neither is installed: Segoe UI, which every Windows PC has.
+- If doc-style.md says Aptos, use its fallback (Calibri) unless a line under "His corrections" asks for
+  Aptos. Aptos is often a download-on-demand cloud font that LibreOffice (and older Office) can't see, so
+  the preview, the PDF and the person receiving it would each get a different font. Don't search the font
+  folders to find out.
+- Only if the preview shows Calibri missing too: Segoe UI, which every Windows PC has.
 - PDF export embeds the font, so a PDF looks the same on any machine.
 
 ## Page setup (Word)

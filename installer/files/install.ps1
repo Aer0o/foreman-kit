@@ -305,7 +305,20 @@ Add-ToList $perm 'allow' @(
     'Bash(python *)', 'Bash(node *)', 'Bash(soffice *)', 'Bash(pdftoppm *)', 'Bash(pdftotext *)', 'Bash(pandoc *)',
     'WebSearch', 'WebFetch'
 )
-Add-ToList $perm 'deny' @('Read(**/.env)', 'Read(**/.env.*)', 'Read(**/*password*)', 'Read(**/*.kdbx)')
+Add-ToList $perm 'deny' @('Read(**/.env)', 'Read(**/.env.*)', 'Read(**/*password*)', 'Read(**/*.kdbx)', 'NotebookEdit')
+
+# Pro plan: every tool call re-reads the whole chat, so keep chats short and drop what a document user never
+# needs. Each value is set only when he hasn't chosen one himself; the effort picker in the app still wins.
+function Set-Default($obj, [string]$name, $value) { if (-not $obj.PSObject.Properties[$name]) { Set-Prop $obj $name $value } }
+Set-Default $settings 'autoCompactWindow' 200000
+Set-Default $settings 'promptSuggestionEnabled' $false
+Set-Default $settings 'disableBundledSkills' $true
+$modelSettings = Get-Child $settings 'modelSettings'
+$opus = Get-Child $modelSettings 'claude-opus-5-5'
+Set-Default $opus 'effortLevel' 'high'
+Set-Default $opus 'autoCompactWindow' 200000
+$envVars = Get-Child $settings 'env'
+Set-Default $envVars 'CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS' '1'
 Write-Settings $settings
 Ok 'SPARK is switched on and will update itself'
 Say ''

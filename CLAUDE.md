@@ -49,6 +49,8 @@ Skills refer to these as `~/.claude/spark/<file>` and must say: read it if prese
 - **Skill prose is for Claude, not for him**, but anything Claude says to him must be plain English:
   no code shown, no jargon, file paths given as links, one question at a time.
 - Never invent numbers, prices, part numbers or code clauses. Flag, don't fix, anything that changes money.
-- Office work goes through Anthropic's docx / pdf / pptx / xlsx skills (account skills `anthropic-skills:*`
-  or plugin `document-skills:*`). We cannot copy them (proprietary licence); our skills call on them by name.
+- New Office files are built directly with python-docx / openpyxl / python-pptx (cheaper on his Pro plan; real
+  runs gave clean results). Anthropic's docx / pdf / pptx / xlsx skills (`anthropic-skills:*` or
+  `document-skills:*`) load only for tracked changes, complex edits of his files, PDF forms, or after a failure.
+  We cannot copy them (proprietary licence).
 - Run stop-slop on README, cheat sheet and any text he reads.
