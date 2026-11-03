@@ -6,7 +6,7 @@ documents: Word, PDF, PowerPoint, Excel, reports, tenders, quotes, emails. He is
 never edit these files. Everything has to work without him touching it.
 
 - **v1** (July 2026) was a drop-in `~/.claude` folder. Its files are lost from Oleg's PC; only the memory
-  note `spark-kit-for-friend` survived. **v2** (this repo) is a plugin plus an installer.
+  note `foreman-kit-for-friend` survived. **v2** (this repo) is a plugin plus an installer.
 - **Public repo** `Aer0o/foreman-kit`: his PC pulls plugin updates from it with no GitHub login.
   **Nothing personal goes in here**: no names, company data, client data, prices or Oleg's own notes.
 - **Git:** AUTO tier (2026-11-03). Claude commits and pushes freely. Claude files tracked.
