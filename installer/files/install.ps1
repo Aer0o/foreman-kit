@@ -352,6 +352,32 @@ $envVars = Get-Child $settings 'env'
 Set-Default $envVars 'CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS' '1'
 Write-Settings $settings
 Ok 'Foreman is switched on and will update itself'
+
+# The desktop app should fetch the plugin from these settings when it next starts, but that can't be watched
+# from here (and on 2026-11-03 it hadn't happened by the first chat). Fetch it now with Claude Code's own
+# command line, so the first chat already has Foreman.
+if (-not $SkipTools) {
+    if (-not (Get-Command claude -ErrorAction SilentlyContinue) -and (Get-Command npm.cmd -ErrorAction SilentlyContinue)) {
+        Note 'Installing the Claude command line (used to fetch Foreman)...'
+        & npm.cmd install -g --silent '@anthropic-ai/claude-code' 2>&1 | Out-Null
+        Refresh-Path
+    }
+    $claudeCmd = Get-Command claude -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($claudeCmd) {
+        $prevConfigDir = $env:CLAUDE_CONFIG_DIR
+        if ($ConfigDir -ne (Join-Path $env:USERPROFILE '.claude')) { $env:CLAUDE_CONFIG_DIR = $ConfigDir }
+        $source = if ($MarketplaceDir) { $MarketplaceDir } else { "https://github.com/$MarketplaceRepo.git" }
+        & $claudeCmd.Source plugin marketplace add $source 2>&1 | Out-Null
+        & $claudeCmd.Source plugin marketplace update foreman 2>&1 | Out-Null
+        & $claudeCmd.Source plugin install 'foreman@foreman' 2>&1 | Out-Null
+        $listed = (& $claudeCmd.Source plugin list 2>&1 | Out-String)
+        $env:CLAUDE_CONFIG_DIR = $prevConfigDir
+        if ($listed -match 'foreman@foreman') { Ok 'Foreman downloaded' }
+        else { Bad 'Foreman could not be downloaded. Check the internet connection, then run Fix Foreman.' }
+    } else {
+        Note 'Foreman will download the next time Claude starts.'
+    }
+}
 Say ''
 
 # ---------------------------------------------------------------- 4. self-test
