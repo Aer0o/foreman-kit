@@ -1,15 +1,15 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "spark",
-  "description": "SPARK: a Claude Code kit for document work in the electrical trade.",
+  "name": "foreman",
+  "description": "Foreman: a Claude Code kit for document work in the electrical trade.",
   "owner": {
     "name": "Oleg Chystieiev"
   },
   "plugins": [
     {
-      "name": "spark",
+      "name": "foreman",
       "description": "Reports, document design, editing, proofreading, emails in his voice, tender review, quote checks, spec lookups and PDF-to-Excel.",
-      "source": "./plugins/spark"
+      "source": "./plugins/foreman"
     }
   ]
 }

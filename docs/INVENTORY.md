@@ -1,4 +1,4 @@
-# What's inside SPARK
+# What's inside Foreman
 
 Everything the kit installs or changes on his PC, in one place. Paths use `%USERPROFILE%`, his Windows
 user folder (for example `C:\Users\Dan`).
@@ -7,10 +7,10 @@ user folder (for example `C:\Users\Dan`).
 
 | Plugin | From | When | What it is |
 |---|---|---|---|
-| **spark** | `https://github.com/Aer0o/spark-kit.git` (marketplace "spark") | Always | Everything in sections 2 to 5. Updates itself when the GitHub repo changes. |
+| **foreman** | `https://github.com/Aer0o/foreman-kit.git` (marketplace "foreman") | Always | Everything in sections 2 to 5. Updates itself when the GitHub repo changes. |
 | **document-skills** | `https://github.com/anthropics/skills.git` (Anthropic's own) | Only if his Claude app doesn't already have the Word/PDF/PowerPoint/Excel skills | Anthropic's docx, pdf, pptx and xlsx skills. Usually not needed: the desktop app syncs them from his account. |
 
-No MCP servers, no slash commands, no agents. SPARK adds nothing he has to type.
+No MCP servers, no slash commands, no agents. Foreman adds nothing he has to type.
 
 ## 2. Skills (12)
 
@@ -41,22 +41,22 @@ Claude picks these from what he types. A hook also points Claude at the right on
 
 | Skill | What it does | He'd say |
 |---|---|---|
-| spark-setup | The 5-minute first-run interview (company profile, logo, writing voice), fixing problems, and restoring a backed-up file. | "set up SPARK", "undo that" |
+| foreman-setup | The 5-minute first-run interview (company profile, logo, writing voice), fixing problems, and restoring a backed-up file. | "set up Foreman", "undo that" |
 
 ## 3. Hooks (4, all PowerShell, run automatically)
 
 | Hook | When | What it does |
 |---|---|---|
-| session-start | Each new chat | Loads the SPARK rules, his company profile and writing voice (under 3,000 tokens). On first run, offers the setup interview. Once a week, checks that LibreOffice, Python and the rest are still installed. Announces SPARK updates once. Deletes backups older than 30 days. |
+| session-start | Each new chat | Loads the Foreman rules, his company profile and writing voice (under 3,000 tokens). On first run, offers the setup interview. Once a week, checks that LibreOffice, Python and the rest are still installed. Announces Foreman updates once. Deletes backups older than 30 days. |
 | prompt-router | Each message he sends | Points Claude at the right skill. Notices "we missed X on the last job" and offers to add it to his checklist. After 20 messages, suggests a fresh chat. |
-| file-guard | Before Claude runs a command or writes a file | Copies any document it is about to touch to `spark\backups\`. Asks him before anything deletes files outside temp folders. |
+| file-guard | Before Claude runs a command or writes a file | Copies any document it is about to touch to `foreman\backups\`. Asks him before anything deletes files outside temp folders. |
 | source-guard | When Claude finishes an answer | If the answer has a part number that isn't in his files or any page Claude opened, and no source, sends Claude back once to source it or mark it unconfirmed. |
 
-A hook that fails logs to `spark\hook-errors.log` and never stops his chat.
+A hook that fails logs to `foreman\hook-errors.log` and never stops his chat.
 
 ## 4. Always-on rules and reply style
 
-- **SPARK rules** (`core/rules.md`), loaded every chat:
+- **Foreman rules** (`core/rules.md`), loaded every chat:
   - never invent a number, price, part number or code clause
   - source every fact
   - flag money, don't fix it
@@ -69,7 +69,7 @@ A hook that fails logs to `spark\hook-errors.log` and never stops his chat.
 - **"Plain Office" reply style**, switched on automatically: answer first, no code on screen, saved files as
   links, one question at a time, Canadian spelling.
 
-## 5. His own files (`%USERPROFILE%\.claude\spark\`)
+## 5. His own files (`%USERPROFILE%\.claude\foreman\`)
 
 Plugin updates never touch these. Claude fills and updates them as he works.
 
@@ -92,8 +92,8 @@ he hasn't chosen one himself.
 
 | Setting | Value | Why |
 |---|---|---|
-| `extraKnownMarketplaces.spark` | git, `https://github.com/Aer0o/spark-kit.git`, autoUpdate on | Where SPARK comes from, and keeps it updated. HTTPS, because GitHub over SSH needs keys he doesn't have. |
-| `enabledPlugins` | `spark@spark` (plus `document-skills@anthropic-agent-skills` only if needed) | Switches SPARK on. |
+| `extraKnownMarketplaces.foreman` | git, `https://github.com/Aer0o/foreman-kit.git`, autoUpdate on | Where Foreman comes from, and keeps it updated. HTTPS, because GitHub over SSH needs keys he doesn't have. |
+| `enabledPlugins` | `foreman@foreman` (plus `document-skills@anthropic-agent-skills` only if needed) | Switches Foreman on. |
 | `permissions.defaultMode` | `acceptEdits` (if unset) | Claude can save files without asking each time. |
 | `permissions.allow` | Read-only file listing, python, node, soffice, pdftoppm, pdftotext, pandoc, qpdf, tesseract, WebSearch, WebFetch | The document tools run without a prompt. |
 | `permissions.deny` | `.env` files, files named like passwords, `.kdbx` vaults, the NotebookEdit tool | Keeps secrets out of reach and drops a tool he'll never use. |
@@ -103,7 +103,7 @@ he hasn't chosen one himself.
 | `disableBundledSkills` | true (if unset) | Hides Claude Code's built-in coding skills he'll never use, so they stop costing context. |
 | `env.CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS` | 1 (if unset) | No code-exploring helper agents. Each one would start its own costly context. |
 
-A copy of his settings from before SPARK is saved as `spark\settings.before-spark2-<date>.json`.
+A copy of his settings from before Foreman is saved as `foreman\settings.before-foreman-<date>.json`.
 
 ## 7. Programs installed (winget, only if missing)
 
@@ -120,9 +120,9 @@ Pillow, lxml, defusedxml, markitdown, pytesseract, pdf2image, pypdfium2.
 
 | File | What |
 |---|---|
-| `Install SPARK.bat` | First install. Asks before installing programs. |
-| `Fix SPARK.bat` | The same installer, without asking. Puts back anything missing. Safe to run any time. |
-| `Uninstall SPARK.bat` | Switches SPARK off. Leaves his files, the programs and the other settings in place. |
+| `Install Foreman.bat` | First install. Asks before installing programs. |
+| `Fix Foreman.bat` | The same installer, without asking. Puts back anything missing. Safe to run any time. |
+| `Uninstall Foreman.bat` | Switches Foreman off. Leaves his files, the programs and the other settings in place. |
 | `READ ME FIRST.txt` | One page: install, use, fix. |
 | `What to say.txt` | Example requests for each kind of job, and good habits. |
 | `files\install.ps1` | The installer itself. |
@@ -130,4 +130,4 @@ Pillow, lxml, defusedxml, markitdown, pytesseract, pdf2image, pypdfium2.
 ## 9. Moved over from SPARK 1 (if found)
 
 His filled-in company profile, his tender checklist and his old notes are kept. The old SPARK 1 files are moved
-to `spark\spark1-backup-<date>\`, and their hook entries are taken out of settings.json, so nothing runs twice.
+to `foreman\spark1-backup-<date>\`, and their hook entries are taken out of settings.json, so nothing runs twice.

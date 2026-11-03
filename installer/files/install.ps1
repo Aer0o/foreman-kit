@@ -1,10 +1,10 @@
-# SPARK installer. Run through "Install SPARK.bat", "Fix SPARK.bat" or "Uninstall SPARK.bat".
-# Safe to run again: it only adds what is missing and never overwrites his own SPARK files.
+# Foreman installer. Run through "Install Foreman.bat", "Fix Foreman.bat" or "Uninstall Foreman.bat".
+# Safe to run again: it only adds what is missing and never overwrites his own Foreman files.
 # Pure ASCII on purpose (Windows PowerShell 5.1 reads BOM-less scripts as ANSI).
 
 param(
     [string]$ConfigDir = (Join-Path $env:USERPROFILE '.claude'),
-    [string]$MarketplaceRepo = 'Aer0o/spark-kit',
+    [string]$MarketplaceRepo = 'Aer0o/foreman-kit',
     [string]$MarketplaceDir = '',      # tests: a local folder instead of GitHub
     [switch]$SkipTools,                # tests: config only
     [switch]$Yes,                      # don't ask before installing programs
@@ -15,7 +15,7 @@ param(
 $ErrorActionPreference = 'Continue'
 # PowerShell 5.1 otherwise writes some arrays as {"value":[...],"Count":n} in settings.json.
 Remove-TypeData System.Array -ErrorAction SilentlyContinue
-$SparkHome = Join-Path $ConfigDir 'spark'
+$ForemanHome = Join-Path $ConfigDir 'foreman'
 $SettingsPath = Join-Path $ConfigDir 'settings.json'
 $Stamp = Get-Date -Format 'yyyy-MM-dd_HHmmss'
 $Report = New-Object System.Collections.Generic.List[string]
@@ -44,8 +44,8 @@ function Add-UserPath([string]$dir, [switch]$Front) {
     $key.SetValue('Path', ($entries -join ';'), [Microsoft.Win32.RegistryValueKind]::ExpandString)
     $key.Close()
     # Tell Windows the environment changed, so Claude sees the new PATH when it restarts.
-    [Environment]::SetEnvironmentVariable('SPARK_PATH_REFRESH', '1', 'User')
-    [Environment]::SetEnvironmentVariable('SPARK_PATH_REFRESH', $null, 'User')
+    [Environment]::SetEnvironmentVariable('FOREMAN_PATH_REFRESH', '1', 'User')
+    [Environment]::SetEnvironmentVariable('FOREMAN_PATH_REFRESH', $null, 'User')
     Refresh-Path
 }
 
@@ -74,13 +74,13 @@ function Read-Settings {
 }
 
 function Stop-UnreadableSettings {
-    Bad "Claude's settings file could not be read, so SPARK changed nothing in it:"
+    Bad "Claude's settings file could not be read, so Foreman changed nothing in it:"
     Bad "  $SettingsPath"
-    Bad 'Send this message to whoever gave you SPARK.'
+    Bad 'Send this message to whoever gave you Foreman.'
     try {
-        New-Item -ItemType Directory -Force $SparkHome | Out-Null
-        $header = @("SPARK install report $Stamp", '')
-        [IO.File]::WriteAllLines((Join-Path $SparkHome 'install-report.txt'), [string[]]($header + $Report), $Utf8)
+        New-Item -ItemType Directory -Force $ForemanHome | Out-Null
+        $header = @("Foreman install report $Stamp", '')
+        [IO.File]::WriteAllLines((Join-Path $ForemanHome 'install-report.txt'), [string[]]($header + $Report), $Utf8)
     } catch { }
     exit 1
 }
@@ -112,23 +112,25 @@ function Add-ToList($obj, [string]$name, [string[]]$items) {
 
 # ---------------------------------------------------------------- uninstall
 if ($Uninstall) {
-    Say "Removing SPARK from Claude..." 'Cyan'
+    Say "Removing Foreman from Claude..." 'Cyan'
     if (Test-Path $SettingsPath) {
         Copy-Item $SettingsPath (Join-Path $ConfigDir "settings.before-uninstall-$Stamp.json")
         $s = Read-Settings
         if ($null -eq $s) { Stop-UnreadableSettings }
+        Remove-Prop $s.extraKnownMarketplaces 'foreman'
+        Remove-Prop $s.enabledPlugins 'foreman@foreman'
         Remove-Prop $s.extraKnownMarketplaces 'spark'
         Remove-Prop $s.enabledPlugins 'spark@spark'
         Write-Settings $s
     }
-    Ok 'SPARK is switched off. Close Claude fully and open it again.'
-    Note "Your company profile, writing notes and backups are still in $SparkHome"
-    Note 'The programs SPARK installed (LibreOffice and the rest) were left in place.'
+    Ok 'Foreman is switched off. Close Claude fully and open it again.'
+    Note "Your company profile, writing notes and backups are still in $ForemanHome"
+    Note 'The programs Foreman installed (LibreOffice and the rest) were left in place.'
     exit 0
 }
 
 Say ''
-Say '  SPARK setup' 'Cyan'
+Say '  Foreman setup' 'Cyan'
 Say '  This sets up Claude for your documents. It takes 5 to 15 minutes.' 'Cyan'
 Say ''
 
@@ -165,7 +167,7 @@ if (-not $SkipTools) {
                 Note "Installing $($t.name)..."
                 winget install --id $t.id -e --silent --accept-package-agreements --accept-source-agreements --disable-interactivity | Out-Null
                 Refresh-Path
-                if (& $t.test) { Ok $t.name } else { Bad "$($t.name) did not install. Run Fix SPARK later to try again." }
+                if (& $t.test) { Ok $t.name } else { Bad "$($t.name) did not install. Run Fix Foreman later to try again." }
             }
         }
     }
@@ -193,7 +195,7 @@ if (-not $SkipTools) {
         $pkgs = @('openpyxl', 'pandas', 'python-docx', 'python-pptx', 'pypdf', 'pdfplumber', 'reportlab', 'Pillow',
                   'lxml', 'defusedxml', 'markitdown', 'pytesseract', 'pdf2image', 'pypdfium2')
         & $py -m pip install --user --upgrade --disable-pip-version-check --quiet @pkgs 2>&1 | Out-Null
-        if ($LASTEXITCODE -eq 0) { Ok 'Python add-ons' } else { Bad 'Python add-ons did not all install. Run Fix SPARK to try again.' }
+        if ($LASTEXITCODE -eq 0) { Ok 'Python add-ons' } else { Bad 'Python add-ons did not all install. Run Fix Foreman to try again.' }
     } else { Bad 'Python is missing, so its add-ons were skipped.' }
 
     $npm = Get-Command npm.cmd -ErrorAction SilentlyContinue
@@ -203,15 +205,41 @@ if (-not $SkipTools) {
         $root = (& $npm.Source root -g).Trim()
         [Environment]::SetEnvironmentVariable('NODE_PATH', $root, 'User')
         $env:NODE_PATH = $root
-        if ($npmOk) { Ok 'Node add-ons' } else { Bad 'Node add-ons did not install. Run Fix SPARK to try again.' }
+        if ($npmOk) { Ok 'Node add-ons' } else { Bad 'Node add-ons did not install. Run Fix Foreman to try again.' }
     } else { Bad 'Node.js is missing, so its add-ons were skipped.' }
     Say ''
 }
 
 # ---------------------------------------------------------------- 2. SPARK 1 clean-up
 Say 'Step 3 of 4: moving your old SPARK setup over' 'White'
-if (-not (Test-Path $SparkHome)) { New-Item -ItemType Directory -Force $SparkHome | Out-Null }
-$v1Backup = Join-Path $SparkHome "spark1-backup-$Stamp"
+if (-not (Test-Path $ForemanHome)) { New-Item -ItemType Directory -Force $ForemanHome | Out-Null }
+# Before the rename to Foreman (2026-11-03) the kit's data folder was .claude\spark. Copy, never move, and
+# never overwrite a Foreman file he has already filled in; only then set the old folder aside.
+$sparkTwo = Join-Path $ConfigDir 'spark'
+if (Test-Path $sparkTwo) {
+    try {
+        foreach ($item in Get-ChildItem $sparkTwo -Force) {
+            $dest = Join-Path $ForemanHome $item.Name
+            if ($item.PSIsContainer) {
+                New-Item -ItemType Directory -Force $dest | Out-Null
+                Copy-Item (Join-Path $item.FullName '*') $dest -Recurse -Force -ErrorAction Stop
+                continue
+            }
+            $destBlank = (Test-Path $dest) -and (Select-String -Path $dest -Pattern 'FOREMAN:BLANK' -SimpleMatch -Quiet)
+            if ((Test-Path $dest) -and -not $destBlank) { continue }
+            Copy-Item $item.FullName $dest -Force -ErrorAction Stop
+            if ($item.Extension -eq '.md') {
+                $txt = [IO.File]::ReadAllText($dest)
+                if ($txt.Contains('SPARK:BLANK')) { [IO.File]::WriteAllText($dest, $txt.Replace('SPARK:BLANK', 'FOREMAN:BLANK'), $Utf8) }
+            }
+        }
+        Rename-Item $sparkTwo "spark-old-$Stamp" -ErrorAction SilentlyContinue
+        Ok 'Kept your files from the SPARK 2 test install'
+    } catch {
+        Bad 'Some files in the old SPARK folder could not be copied (one may be open). Quit Claude fully, then run Fix Foreman.'
+    }
+}
+$v1Backup = Join-Path $ForemanHome "spark1-backup-$Stamp"
 $v1Items = @(
     'CLAUDE.md', 'company-profile.md',
     'skills\tender-review', 'skills\quote-check', 'skills\doc-to-excel', 'skills\spec-lookup', 'skills\client-email',
@@ -223,8 +251,8 @@ foreach ($rel in $v1Items) {
     if (-not (Test-Path $src)) { continue }
     if ($rel -eq 'CLAUDE.md') {
         if (-not (Select-String -Path $src -Pattern 'SPARK' -CaseSensitive -Quiet)) { continue }
-        # SPARK 1 wrote this file, but Claude may have added things he asked it to remember. Keep them where SPARK 2 looks.
-        Copy-Item $src (Join-Path $SparkHome 'spark1-notes.md') -Force
+        # SPARK 1 wrote this file, but Claude may have added things he asked it to remember. Keep them where Foreman looks.
+        Copy-Item $src (Join-Path $ForemanHome 'spark1-notes.md') -Force
         Ok 'Kept your notes from SPARK 1'
     }
     if ($rel -eq 'hooks\session-start.ps1' -and -not (Select-String -Path $src -Pattern 'company-profile' -Quiet)) { continue }
@@ -234,13 +262,13 @@ foreach ($rel in $v1Items) {
     # Keep what he taught SPARK 1: a filled-in profile and his checklist.
     if ($rel -eq 'company-profile.md') {
         $filled = @(Select-String -Path $src -Pattern ':\s*\S' -ErrorAction SilentlyContinue).Count
-        $newProfile = Join-Path $SparkHome 'profile.md'
-        $newIsBlank = (-not (Test-Path $newProfile)) -or (Select-String -Path $newProfile -SimpleMatch 'SPARK:BLANK' -Quiet)
+        $newProfile = Join-Path $ForemanHome 'profile.md'
+        $newIsBlank = (-not (Test-Path $newProfile)) -or (Select-String -Path $newProfile -SimpleMatch 'FOREMAN:BLANK' -Quiet)
         if ($filled -ge 3 -and $newIsBlank) { Copy-Item $src $newProfile -Force; Ok 'Kept your company profile' }
     }
     if ($rel -eq 'skills\tender-review') {
         $old = Get-ChildItem $src -Recurse -Filter '*checklist*' -File -ErrorAction SilentlyContinue | Select-Object -First 1
-        if ($old) { Copy-Item $old.FullName (Join-Path $SparkHome 'checklist-spark1.md') -Force; Ok 'Kept your old tender checklist' }
+        if ($old) { Copy-Item $old.FullName (Join-Path $ForemanHome 'checklist-spark1.md') -Force; Ok 'Kept your old tender checklist' }
     }
 
     $dest = Join-Path $v1Backup $rel
@@ -251,7 +279,7 @@ foreach ($rel in $v1Items) {
 
 $settings = Read-Settings
 if ($null -eq $settings) { Stop-UnreadableSettings }
-if (Test-Path $SettingsPath) { Copy-Item $SettingsPath (Join-Path $SparkHome "settings.before-spark2-$Stamp.json") }
+if (Test-Path $SettingsPath) { Copy-Item $SettingsPath (Join-Path $ForemanHome "settings.before-foreman-$Stamp.json") }
 # Drop SPARK 1's hook entries; the plugin brings its own.
 if ($settings.PSObject.Properties['hooks']) {
     foreach ($evt in @($settings.hooks.PSObject.Properties.Name)) {
@@ -273,15 +301,18 @@ if ($moved -gt 0) { Ok "Old SPARK files moved to $v1Backup" } else { Ok 'No old 
 Say ''
 
 # ---------------------------------------------------------------- 3. Claude settings
-Say 'Step 4 of 4: switching SPARK on in Claude' 'White'
+Say 'Step 4 of 4: switching Foreman on in Claude' 'White'
 $markets = Get-Child $settings 'extraKnownMarketplaces'
 if ($MarketplaceDir) {
-    Set-Prop $markets 'spark' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'directory'; path = $MarketplaceDir } })
+    Set-Prop $markets 'foreman' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'directory'; path = $MarketplaceDir } })
 } else {
-    Set-Prop $markets 'spark' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'git'; url = "https://github.com/$MarketplaceRepo.git" }; autoUpdate = $true })
+    Set-Prop $markets 'foreman' ([pscustomobject]@{ source = [pscustomobject]@{ source = 'git'; url = "https://github.com/$MarketplaceRepo.git" }; autoUpdate = $true })
 }
 $plugins = Get-Child $settings 'enabledPlugins'
-Set-Prop $plugins 'spark@spark' $true
+Set-Prop $plugins 'foreman@foreman' $true
+# The same kit under its old name: switch it off so it never runs twice.
+Remove-Prop $plugins 'spark@spark'
+Remove-Prop $markets 'spark'
 
 # Both marketplaces use plain HTTPS git URLs: the 'github' source type clones over SSH, which fails on a PC
 # with no GitHub keys.
@@ -320,19 +351,19 @@ Set-Default $opus 'autoCompactWindow' 200000
 $envVars = Get-Child $settings 'env'
 Set-Default $envVars 'CLAUDE_CODE_DISABLE_EXPLORE_PLAN_AGENTS' '1'
 Write-Settings $settings
-Ok 'SPARK is switched on and will update itself'
+Ok 'Foreman is switched on and will update itself'
 Say ''
 
 # ---------------------------------------------------------------- 4. self-test
 if (-not $SkipTools) {
     Say 'Checking that everything works...' 'White'
-    $t = Join-Path $env:TEMP "spark-selftest-$Stamp"
+    $t = Join-Path $env:TEMP "foreman-selftest-$Stamp"
     New-Item -ItemType Directory -Force $t | Out-Null
     $pyCode = @"
 import sys, docx, openpyxl, pptx
-d = docx.Document(); d.add_heading('SPARK test', 1); d.add_paragraph('If you can read this, Word files work.'); d.save(sys.argv[1] + r'\test.docx')
+d = docx.Document(); d.add_heading('Foreman test', 1); d.add_paragraph('If you can read this, Word files work.'); d.save(sys.argv[1] + r'\test.docx')
 wb = openpyxl.Workbook(); ws = wb.active; ws['A1'] = 2; ws['A2'] = 3; ws['A3'] = '=A1*A2'; wb.save(sys.argv[1] + r'\test.xlsx')
-p = pptx.Presentation(); s = p.slides.add_slide(p.slide_layouts[0]); s.shapes.title.text = 'SPARK test'; p.save(sys.argv[1] + r'\test.pptx')
+p = pptx.Presentation(); s = p.slides.add_slide(p.slide_layouts[0]); s.shapes.title.text = 'Foreman test'; p.save(sys.argv[1] + r'\test.pptx')
 print('ok')
 "@
     [IO.File]::WriteAllText("$t\make.py", $pyCode, $Utf8)
@@ -368,14 +399,14 @@ print('ok')
 }
 
 $failed = @($Report | Where-Object { $_.Contains('[FAIL]') }).Count
-$reportPath = Join-Path $SparkHome 'install-report.txt'
-$header = @("SPARK install report $Stamp", "Windows $([Environment]::OSVersion.Version)", '')
+$reportPath = Join-Path $ForemanHome 'install-report.txt'
+$header = @("Foreman install report $Stamp", "Windows $([Environment]::OSVersion.Version)", '')
 [IO.File]::WriteAllLines($reportPath, [string[]]($header + $Report), $Utf8)
 
 if ($failed -eq 0) {
     Say '  All done.' 'Green'
 } else {
-    Say "  Finished with $failed problem(s). Send this file to whoever gave you SPARK:" 'Yellow'
+    Say "  Finished with $failed problem(s). Send this file to whoever gave you Foreman:" 'Yellow'
     Say "  $reportPath" 'Yellow'
 }
 Say ''

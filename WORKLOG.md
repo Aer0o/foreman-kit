@@ -1,5 +1,25 @@
-# WORKLOG: SPARK
+# WORKLOG: Foreman (was SPARK)
 
+## 2026-11-03 · Renamed SPARK to Foreman
+
+- **Why:** Oleg didn't like "SPARK". The kit is now **Foreman**:
+  - plugin and marketplace `foreman`
+  - data folder `~/.claude/foreman/`
+  - skill `foreman-setup`
+  - `Install / Fix / Uninstall Foreman.bat`
+  - marker `FOREMAN:BLANK`
+  - GitHub repo `Aer0o/foreman-kit` (renamed; GitHub redirects the old URL)
+- **Kept on purpose:** every SPARK 1 reference. The July kit really was called SPARK, so the installer still
+  finds its CLAUDE.md, profile and checklist (`spark1-*` files), and says "your old SPARK setup". The router
+  also accepts "set up spark" and "spark isn't working", because that's the name he knows.
+- **Old-name cleanup:** the installer and uninstaller switch off `spark@spark` and its marketplace. A
+  `.claude\spark` folder from a SPARK 2 test install is copied into `.claude\foreman` and only fills files that
+  are missing or still blank; backups are merged. The old folder is then renamed `spark-old-<date>`. If a file
+  is locked, the installer says so and tells him to run Fix Foreman.
+- **Review:** the code-reviewer found the repo URL pointing at a repo not yet renamed, a failed move that would
+  have hidden his profile, and uninstall leaving the old plugin on. All fixed.
+- **Tests:** 68/68, and `claude plugin validate` passes.
+- Entries below this line use the old name.
 ## 2026-11-03 · Token pass for the Pro plan, setup guide, inventory
 
 - **Finding:** the first turn is ~53k tokens, mostly Claude Code itself; SPARK adds ~2k. What drives cost is

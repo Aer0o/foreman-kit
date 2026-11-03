@@ -1,21 +1,21 @@
-# SPARK kit: Claude notes
+# Foreman kit: Claude notes
 
-SPARK is a Claude Code kit for Oleg's friend, an electrical contractor and estimator in Ontario.
+Foreman is a Claude Code kit for Oleg's friend, an electrical contractor and estimator in Ontario.
 He runs Claude Code in the Windows desktop app (Code tab, Local sessions) on the Pro plan and uses it for
 documents: Word, PDF, PowerPoint, Excel, reports, tenders, quotes, emails. He is not a coder and will
 never edit these files. Everything has to work without him touching it.
 
 - **v1** (July 2026) was a drop-in `~/.claude` folder. Its files are lost from Oleg's PC; only the memory
   note `spark-kit-for-friend` survived. **v2** (this repo) is a plugin plus an installer.
-- **Public repo** `Aer0o/spark-kit`: his PC pulls plugin updates from it with no GitHub login.
+- **Public repo** `Aer0o/foreman-kit`: his PC pulls plugin updates from it with no GitHub login.
   **Nothing personal goes in here**: no names, company data, client data, prices or Oleg's own notes.
 - **Git:** AUTO tier (2026-11-03). Claude commits and pushes freely. Claude files tracked.
 
 ## Layout
 
 ```
-.claude-plugin/marketplace.json   marketplace "spark" -> plugin ./plugins/spark
-plugins/spark/                    the plugin (updates itself on his PC)
+.claude-plugin/marketplace.json   marketplace "foreman" -> plugin ./plugins/foreman
+plugins/foreman/                    the plugin (updates itself on his PC)
   skills/<name>/SKILL.md          one folder per skill
   hooks/hooks.json, hooks/*.ps1   PowerShell hooks
   output-styles/                  "Plain Office" output style
@@ -27,8 +27,8 @@ tests/                            hook fixtures + runner
 
 ## His data lives OUTSIDE the plugin
 
-Plugin updates replace `plugins/spark/` wholesale, so anything he or Claude edits lives in
-`%USERPROFILE%\.claude\spark\` (written by the installer and the SessionStart hook from `defaults/` when missing):
+Plugin updates replace `plugins/foreman/` wholesale, so anything he or Claude edits lives in
+`%USERPROFILE%\.claude\foreman\` (written by the installer and the SessionStart hook from `defaults/` when missing):
 
 | file | what |
 |---|---|
@@ -39,7 +39,7 @@ Plugin updates replace `plugins/spark/` wholesale, so anything he or Claude edit
 | `backups\` | copies of Office files taken before a command touched them; pruned after 30 days |
 | `state.json` | hook state: last health check, last version seen, turn counter |
 
-Skills refer to these as `~/.claude/spark/<file>` and must say: read it if present, never invent its contents.
+Skills refer to these as `~/.claude/foreman/<file>` and must say: read it if present, never invent its contents.
 
 ## Rules for writing anything in this repo
 
