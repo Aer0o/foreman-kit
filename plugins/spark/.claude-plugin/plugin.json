@@ -1,0 +1,9 @@
+{
+  "name": "spark",
+  "description": "Document, report, tender and quote help for an electrical contractor: plain-English replies, his company profile and writing voice loaded every session, automatic backups of Office files, and checks that stop made-up part numbers.",
+  "author": {
+    "name": "Oleg Chystieiev"
+  },
+  "license": "MIT",
+  "keywords": ["documents", "word", "excel", "pdf", "powerpoint", "estimating", "electrical"]
+}

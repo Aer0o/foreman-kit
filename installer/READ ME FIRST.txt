@@ -1,0 +1,42 @@
+SPARK 2
+=======
+
+SPARK sets up Claude for your paperwork: reports, quotes, tenders, emails, and Word, PDF,
+Excel and PowerPoint files. Install it once. After that it updates itself.
+
+
+INSTALL (about 10 minutes)
+--------------------------
+1. Before unzipping: right-click the zip file, choose Properties, tick "Unblock" at the
+   bottom, click OK. Then unzip it somewhere you'll keep it, like Documents\SPARK.
+2. Double-click "Install SPARK".
+   - If Windows says "Windows protected your PC", click "More info", then "Run anyway".
+   - Type Y and press Enter when it asks to install programs.
+   - Click Yes each time Windows asks "Do you want to allow this app to make changes?"
+3. When it says "All done", quit Claude completely: right-click the Claude icon next to the
+   clock and choose Quit. Then open Claude again.
+4. In Claude, open the Code tab, pick a folder to work in (for example Documents\Jobs),
+   and make sure the session is set to "Local".
+
+The first time, Claude offers a 5-minute setup about your company. Do it once and it
+remembers your details, logo and colours, standard exclusions and how you write.
+
+If the installer says it "finished with problems", send the file it names to whoever gave you
+SPARK.
+
+
+USING IT
+--------
+Ask in plain words. See "What to say.txt" for examples. You never need to type commands.
+
+
+IF SOMETHING BREAKS
+-------------------
+- Double-click "Fix SPARK". It puts back anything that went missing. Then reopen Claude.
+- Claude changed a file and you want the old one back: say "undo that, get my old file back".
+  SPARK keeps a copy of every document before Claude touches it, for 30 days.
+
+
+REMOVE IT
+---------
+Double-click "Uninstall SPARK". Your company details stay saved in case you come back.

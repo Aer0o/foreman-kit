@@ -1,0 +1,38 @@
+WHAT TO SAY TO CLAUDE
+=====================
+
+Drag files into the chat, or tell Claude which folder they're in. Then ask the way you'd ask
+a person.
+
+REPORTS AND DOCUMENTS
+  "Write a site report for the Main St job from these notes and photos."
+  "Turn this into a proper proposal on our letterhead."
+  "Make this document look professional."
+  "Fix the wording in this Word file. Don't change the numbers."
+  "Proofread this before I send it."
+  "Make a 5-slide presentation from this report for the owner meeting."
+
+TENDERS AND QUOTES
+  "Go through these tender documents and tell me what's easy to miss."
+  "Write the RFI questions for what the specs don't say."
+  "Check my quote before I send it to the GC."
+  "We missed the firestopping on the last job. Add it to the checklist."
+
+PARTS AND SPECS
+  "What's the catalogue number for a 20A arc-fault breaker for this panel?"
+  "Is this fixture CSA approved? Show me where it says so."
+
+EXCEL
+  "Pull the lighting fixture schedule out of this PDF into Excel."
+  "Make a chart of material costs by month from this sheet."
+
+EMAILS
+  "Write an email to the client chasing the invoice from October."
+  "Reply to this GC and say we need a change order for the extra outlets."
+  "Learn how I write" (then paste two or three of your own emails).
+
+GOOD HABITS
+  - One job per chat. Start a new chat for the next job. Long chats use up your plan faster.
+  - If Claude gives a part number or price, it should show where it came from. If it doesn't,
+    ask "where did that come from?"
+  - Claude saves changed files as "v2" next to your original. Claude leaves your original alone.
