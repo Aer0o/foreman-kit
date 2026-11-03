@@ -15,7 +15,39 @@
     `document-skills` plugin, so he never runs two copies.
   - **No `version` in plugin.json:** each commit becomes an update for him.
   - **His data lives in `~/.claude/spark/`,** outside the plugin, so updates never overwrite it.
+- **Code review (11 findings, all fixed, regression test for each):**
+  - Old documents' backups were pruned the next day: `Copy-Item` keeps the file date.
+  - An unparseable settings.json was silently replaced.
+  - A locked state file skipped the delete prompt.
+  - Delete prompt problems:
+    - A temp folder anywhere in a command hid real deletes.
+    - It nagged on "Kennedy Rd" and on `del wb['Sheet']`.
+  - Git Bash, `$env:` and temp-script paths weren't backed up.
+  - Source-guard problems:
+    - It blocked hex colours, electrical units and quote numbers.
+    - Claude's own search words counted as a source.
+  - "I forgot to attach" wrote to the checklist.
+  - CLAUDE.md notes were lost in the migration.
+  - User PATH was written as REG_SZ.
+- **Found while testing:**
+  - The `github` marketplace source clones over SSH and fails on a PC without keys, so both marketplaces now use
+    `git` + HTTPS.
+  - `File.Replace(..., $null)` fails in PS 5.1, because PowerShell passes `$null` as `""`. Fixed with
+    `[NullString]::Value`.
+  - Pushes failed silently: Git Credential Manager stores credentials per path, so this repo has none. This
+    repo now uses the gh credential helper locally.
 - **Checked:**
+  - 61/61 hook and installer tests pass.
+  - A real installer run on Oleg's PC installed LibreOffice, Pandoc, Poppler, QPDF and Tesseract, and every
+    self-test passed.
+  - `claude -p --plugin-dir` loads all 12 skills and the SessionStart hook fires.
+  - A clean config installs `spark@spark` from GitHub over HTTPS, and a push updated it from 76cdab19de4a
+    to d19feacdd634.
+- **Not checked:**
+  - A full model run: the CLI on Oleg's PC isn't logged in.
+  - The desktop app installing the plugin from settings alone.
+  - Anything on the friend's PC.
+- **Earlier checks:**
   - 40/40 hook tests pass.
   - `claude plugin validate` passes, with the expected warning about the missing version.
   - The v1 migration was run on a fake v1 layout. It kept his profile and checklist, removed the old
